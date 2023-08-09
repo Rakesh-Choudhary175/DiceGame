@@ -14,11 +14,17 @@ const currentScore = document.querySelectorAll('.current-score');
 
 const player = document.querySelectorAll('.player');
 
+const diceImg = document.querySelector('.dice');
+
 //Important varables
+
+diceImg.classList.add('hidden');
 
 let diceRoll = Math.floor(Math.random() * 6) + 1;
 
 let activePlayer = 0;
+
+let playing = true;
 
 // Important functions defined
 
@@ -55,37 +61,53 @@ newGame.addEventListener('click', function () {
   activePlayer = 0;
   resetScore();
   resetDice();
+
+  for (let i = 0; i < player.length; i++) {
+    if (player[i].classList.contains('player--winner')) {
+      player[i].classList.remove('player--winner');
+    }
+  }
+  playing = true;
 });
 
 dice.addEventListener('click', function () {
-  diceRoll = Math.floor(Math.random() * 6) + 1;
+  if (playing) {
+    diceRoll = Math.floor(Math.random() * 6) + 1;
 
-  document.querySelector('.dice').src = `dice-${diceRoll}.png`;
+    diceImg.classList.remove('hidden');
 
-  if (diceRoll != 1) {
-    currentScore[activePlayer].textContent =
-      Number(currentScore[activePlayer].textContent) + diceRoll;
-  } else {
-    currentScore[activePlayer].textContent = 0;
-    changePlayer();
+    diceImg.src = `dice-${diceRoll}.png`;
+
+    if (diceRoll != 1) {
+      currentScore[activePlayer].textContent =
+        Number(currentScore[activePlayer].textContent) + diceRoll;
+    } else {
+      currentScore[activePlayer].textContent = 0;
+      changePlayer();
+    }
+
+    // console.log(currentScore[activePlayer].textContent);
+
+    // console.log(diceRoll);
   }
-
-  // console.log(currentScore[activePlayer].textContent);
-
-  // console.log(diceRoll);
 });
 
 hold.addEventListener('click', function () {
-  score[activePlayer].textContent =
-    Number(score[activePlayer].textContent) +
-    Number(currentScore[activePlayer].textContent);
+  if (playing) {
+    score[activePlayer].textContent =
+      Number(score[activePlayer].textContent) +
+      Number(currentScore[activePlayer].textContent);
 
-  currentScore[activePlayer].textContent = 0;
+    currentScore[activePlayer].textContent = 0;
 
-  if (Number(score[activePlayer].textContent) >= 100) {
-    player[activePlayer].classList.add('player--winner');
+    if (Number(score[activePlayer].textContent) >= 20) {
+      player[activePlayer].classList.add('player--winner');
+      diceImg.classList.add('hidden');
+      changePlayer();
+      playing = false;
+    }
+
+    changePlayer();
+    resetDice();
   }
-
-  changePlayer();
-  resetDice();
 });
