@@ -70,25 +70,22 @@ dice.addEventListener('click', function () {
     changePlayer();
   }
 
-  console.log(currentScore[activePlayer].textContent);
+  // console.log(currentScore[activePlayer].textContent);
 
-  console.log(diceRoll);
+  // console.log(diceRoll);
 });
 
 hold.addEventListener('click', function () {
-  for (let i = 0; i < player.length; i++) {
-    if (Number(player[i].textContent) >= 100) {
-      player[i].classList.add('player--winner');
-    }
-  }
-
   score[activePlayer].textContent =
     Number(score[activePlayer].textContent) +
     Number(currentScore[activePlayer].textContent);
 
   currentScore[activePlayer].textContent = 0;
 
+  if (Number(score[activePlayer].textContent) >= 100) {
+    player[activePlayer].classList.add('player--winner');
+  }
+
   changePlayer();
   resetDice();
-  console.log(activePlayer);
 });
